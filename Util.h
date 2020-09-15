@@ -10,7 +10,7 @@ namespace Util
 	int intersec2d(Ponto k, Ponto l, Ponto m, Ponto n, double& s, double& t);
 	bool HaInterseccao(Ponto k, Ponto l, Ponto m, Ponto n);
 	void GeraPontos(int qtd, Poligono& ConjuntoDePonto, Ponto& Max, Ponto& Min);
-	void GeraConvexHull();
+	void GeraConvexHull(Poligono& Mapa, Poligono& ConvexHull);
 	void MontaFaixas();
 	void TestaForcaBruta(Poligono&ConjuntoDePonto, Poligono& Mapa);
 	void TestaInclusao();

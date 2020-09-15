@@ -82,7 +82,7 @@ void Util::GeraPontos(int qtd, Poligono& ConjuntoDePonto, Ponto& Max, Ponto& Min
 
 // **********************************************************************
 // **********************************************************************
-void Util::GeraConvexHull()
+void Util::GeraConvexHull(Poligono& Mapa, Poligono& ConvexHull)
 {
 
 
