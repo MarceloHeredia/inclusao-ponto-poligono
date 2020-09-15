@@ -23,7 +23,9 @@
     <ClInclude Include="Faixa.h" />
     <ClInclude Include="Poligono.h" />
     <ClInclude Include="Ponto.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Temporizador.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConjuntoDeFaixas.cpp" />
@@ -32,6 +34,10 @@
     <ClCompile Include="Poligono.cpp" />
     <ClCompile Include="Ponto.cpp" />
     <ClCompile Include="Temporizador.cpp" />
+    <ClCompile Include="Util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Poligonos.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
