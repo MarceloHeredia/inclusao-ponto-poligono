@@ -32,15 +32,21 @@ using namespace std;
 class Poligono
 {
     vector <Ponto> Vertices;
+    Ponto left, right, top, bottom;
 public:
     Poligono();
-    Ponto getVertice(int);
-    unsigned long getNVertices();
-    void insereVertice(Ponto);
-    void desenhaPoligono();
-    void desenhaVertices();
-    void desenhaVertice(int r, int g, int b, int pos);
+    Ponto get_vertice(int);
+    unsigned long size();
+    void insere_vertice(Ponto);
+    void desenha_poligono();
+    void desenha_vertices();
+    void desenha_vertice(int r, int g, int b, int pos);
     void imprime();
+    void initialize(Ponto initial);
+    Ponto get_left();
+    Ponto get_right();
+    Ponto get_top();
+    Ponto get_bottom();
 };
 
 #endif 

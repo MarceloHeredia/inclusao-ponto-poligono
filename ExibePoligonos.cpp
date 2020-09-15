@@ -70,7 +70,7 @@ void LeMapa(const char* nome)
 
     Min = Ponto(x, y);
     Max = Ponto(x, y);
-    Mapa.insereVertice(Ponto(x, y));
+    Mapa.initialize(Ponto(x, y));
     for (int i = 0; i < qtdVertices; i++)
     {
         // Le cada elemento da linha
@@ -84,7 +84,7 @@ void LeMapa(const char* nome)
         if (!input)
             break;
         //cout << "Arquivo: " << x << " " << y << endl;
-        Mapa.insereVertice(Ponto(x, y));
+        Mapa.insere_vertice(Ponto(x, y));
     }
     cout << "leitura concluida." << endl;
     //cout << "Linhas lidas: " << nLinha << endl;
@@ -105,13 +105,13 @@ void init()
     LeMapa("Arquivos\\PoligonoDeTeste.txt");
    /* Min.x--;Min.y--;
     Max.x++;Max.y++;*/
-    cout << "Vertices no Vetor: " << Mapa.getNVertices() << endl;
+    cout << "Vertices no Vetor: " << Mapa.size() << endl;
 
 	//GeraConvexHull();
 
 	//MontaFaixas();
 
-    Util::GeraPontos(200,ConjuntoDePonto, Max, Min);
+    Util::gera_pontos(200,ConjuntoDePonto, Max, Min);
     
 }
 // **********************************************************************
@@ -124,11 +124,11 @@ void initOLD(void)
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
     // Leitura do arquivo
-    Mapa.insereVertice(Ponto(0,0));
-    Mapa.insereVertice(Ponto(-3,5));
-    Mapa.insereVertice(Ponto(5,5));
-    Mapa.insereVertice(Ponto(8,-3));
-    Mapa.insereVertice(Ponto(-4,-3));
+    Mapa.insere_vertice(Ponto(0,0));
+    Mapa.insere_vertice(Ponto(-3,5));
+    Mapa.insere_vertice(Ponto(5,5));
+    Mapa.insere_vertice(Ponto(8,-3));
+    Mapa.insere_vertice(Ponto(-4,-3));
 
     // Seta os limites da ‡rea de desenho
     Min = Ponto(-10, -10, 0);
@@ -186,7 +186,7 @@ void reshape( int w, int h )
 // **********************************************************************
 //
 // **********************************************************************
-void DesenhaEixos()
+void desenha_eixos()
 {
     Ponto Meio;
     Meio.x = (Max.x+Min.x)/2;
@@ -222,13 +222,13 @@ void display( void )
 
 	glLineWidth(1);
 	glColor3f(1,1,1); // R, G, B  [0..1]
-    DesenhaEixos();
+    desenha_eixos();
 
     glLineWidth(2);
     glColor3f(1,1,0); // R, G, B  [0..1]
-    Mapa.desenhaPoligono();
+    Mapa.desenha_poligono();
 
-	Util::ClassificaPontosAleatorios();
+	Util::testa_forca_bruta(ConjuntoDePonto,Mapa,Min);
 
 	//se Vertice[i] = minimo do vetor & Vertice[i] = maximo do proximo vetor, soma 1
 	//se nao soma 2 //minimo local ou maximo local
