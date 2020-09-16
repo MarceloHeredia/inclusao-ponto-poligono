@@ -15,7 +15,6 @@
 #include <fstream>
 #include <random>
 
-
 using namespace std;
 
 #ifdef WIN32
@@ -37,12 +36,15 @@ using namespace std;
 #include "Poligono.h"
 #include "Util.h"
 #include "Temporizador.h"
+#include "ConjuntoDeFaixas.h"
+
 Temporizador T;
 double AccumDeltaT=0;
-
+int nfaixas = 10; //cria 10 faixas por definiçao, pode ser mudado
 Poligono Mapa;
 Poligono ConvexHull;
 Poligono ConjuntoDePonto;
+ConjuntoDeFaixas faixas;
 // Limites l—gicos da ‡rea de desenho
 Ponto Min, Max;
 
@@ -103,15 +105,14 @@ void init()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
     LeMapa("Arquivos\\PoligonoDeTeste.txt");
+   // LeMapa("Arquivos\\EstadoRS.txt");
    /* Min.x--;Min.y--;
     Max.x++;Max.y++;*/
     cout << "Vertices no Vetor: " << Mapa.size() << endl;
 
-	//GeraConvexHull();
-
-	//MontaFaixas();
-
-    Util::gera_pontos(200,ConjuntoDePonto, Max, Min);
+    faixas.cria_faixas(nfaixas);//cria dez faixas
+    Util::monta_faixas(faixas, Mapa, Max.y, Min.y);
+    Util::gera_pontos(20000,ConjuntoDePonto, Max, Min);
     
 }
 // **********************************************************************
@@ -202,6 +203,19 @@ void desenha_eixos()
         glVertex2f(Meio.x,Max.y);
     glEnd();
 }
+
+void desenha_faixas()
+{
+    glLineWidth(1);
+    glColor3f(1, 1, 1); // R, G, B  [0..1]
+    glBegin(GL_LINES);
+    for (int i = 0; i < faixas.size(); i++)
+    {
+        glVertex2f(Mapa.get_left().x, i * faixas.get_tamanho());
+        glVertex2f(Mapa.get_right().x, i * faixas.get_tamanho());
+    }
+    glEnd();
+}
 // **********************************************************************
 //  void display( void )
 //
@@ -228,8 +242,10 @@ void display( void )
     glColor3f(1,1,0); // R, G, B  [0..1]
     Mapa.desenha_poligono();
 
-	Util::testa_forca_bruta(ConjuntoDePonto,Mapa,Min);
+	//Util::testa_forca_bruta(ConjuntoDePonto,Mapa,Min);
+    Util::testa_faixas(faixas,ConjuntoDePonto, Mapa, Min);
 
+    desenha_faixas();
 	//se Vertice[i] = minimo do vetor & Vertice[i] = maximo do proximo vetor, soma 1
 	//se nao soma 2 //minimo local ou maximo local
 

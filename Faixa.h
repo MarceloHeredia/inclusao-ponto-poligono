@@ -11,6 +11,7 @@ class Faixa
 	vector<int> ArestasNaFaixa;
 	public:
 		void CadastraAresta(int a);
+		vector<int> get_arestas();
 		Faixa();
 };
 
