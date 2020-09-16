@@ -1,6 +1,6 @@
 // **********************************************************************
-// PUCRS/Escola Politcnica
-// COMPUTA‚ÌO GRçFICA
+// PUCRS/Escola Politï¿½cnica
+// COMPUTAï¿½ï¿½O GRï¿½FICA
 //
 // Programa basico para criar aplicacoes 2D em OpenGL
 //
@@ -29,7 +29,7 @@ using namespace std;
 #endif
 
 #ifdef __linux__
-#include <glut.h>
+#include <GL/glut.h>
 #endif
 
 #include "Ponto.h"
@@ -39,12 +39,12 @@ using namespace std;
 #include "ConjuntoDeFaixas.h"
 Temporizador T;
 double AccumDeltaT=0;
-int nfaixas = 10; //cria 10 faixas por definiçao, pode ser mudado
+int nfaixas = 10; //cria 10 faixas por definiï¿½ao, pode ser mudado
 Poligono Mapa;
 Poligono ConvexHull;
 Poligono ConjuntoDePonto;
 ConjuntoDeFaixas faixas;
-// Limites l—gicos da ‡rea de desenho
+// Limites lï¿½gicos da ï¿½rea de desenho
 Ponto Min, Max;
 
 // **********************************************************************
@@ -106,10 +106,10 @@ void LeMapa(const char* nome)
 // **********************************************************************
 void init()
 {
-    // Define a cor do fundo da tela PRETO para melhor visualizaçao das cores dos vertices e arestas
+    // Define a cor do fundo da tela PRETO para melhor visualizaï¿½ao das cores dos vertices e arestas
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
-   LeMapa("Arquivos\\PoligonoDeTeste.txt");
+   LeMapa("Arquivos/PoligonoDeTeste.txt");
    // LeMapa("Arquivos\\EstadoRS.txt");
    /* Min.x--;Min.y--;
     Max.x++;Max.y++;*/
@@ -119,6 +119,10 @@ void init()
     //Util::monta_faixas(faixas, Mapa, Max.y, Min.y);
     Util::gera_pontos(200,ConjuntoDePonto, Max, Min);
     Util::gera_convex_hull(Mapa, ConvexHull);
+    //Ponto test = Ponto(2, 7); // Ponto estÃ¡ dentro do poligono
+    Ponto test = Ponto(2, 8); // Ponto estÃ¡ dentro do poligono
+    ConvexHull.insere_vertice(test);
+    printf("resultado Ã© %d\n ", Util::testa_inclusao_ponto(ConvexHull, test));
     
 }
 // **********************************************************************
@@ -137,7 +141,7 @@ void initOLD(void)
     Mapa.insere_vertice(Ponto(8,-3));
     Mapa.insere_vertice(Ponto(-4,-3));
 
-    // Seta os limites da ‡rea de desenho
+    // Seta os limites da ï¿½rea de desenho
     Min = Ponto(-10, -10, 0);
     Max = Ponto( 10,  10, 1);
 }
@@ -156,7 +160,7 @@ void animate()
     TempoTotal += dt;
     nFrames++;
 
-    if (AccumDeltaT > 1.0/30) // fixa a atualiza‹o da tela em 30
+    if (AccumDeltaT > 1.0/30) // fixa a atualizaï¿½ï¿½o da tela em 30
     {
         AccumDeltaT = 0;
         glutPostRedisplay();
@@ -232,7 +236,7 @@ void display( void )
 	// Limpa a tela coma cor de fundo
 	glClear(GL_COLOR_BUFFER_BIT);
 
-    // Define os limites lógicos da área OpenGL dentro da Janela
+    // Define os limites lï¿½gicos da ï¿½rea OpenGL dentro da Janela
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -257,14 +261,14 @@ void display( void )
 
     glPointSize(6);
     glColor3f(1, 0, 0);
-    ConvexHull.desenha_poligono();
+    ConvexHull.desenha_vertices();
 
 	glutSwapBuffers();
 }
 // **********************************************************************
 // ContaTempo(double tempo)
-//      conta um certo nœmero de segundos e informa quanto frames
-// se passaram neste per’odo.
+//      conta um certo nï¿½mero de segundos e informa quanto frames
+// se passaram neste perï¿½odo.
 // **********************************************************************
 void ContaTempo(double tempo)
 {
@@ -342,41 +346,41 @@ int  main ( int argc, char** argv )
     glutInitWindowSize  ( 650, 500);
 
     // Cria a janela na tela, definindo o nome da
-    // que aparecera na barra de título da janela.
+    // que aparecera na barra de tï¿½tulo da janela.
     glutCreateWindow    ( "Inclusao de Pontos em Poligono" );
 
-    // executa algumas inicializações
+    // executa algumas inicializaï¿½ï¿½es
     init ();
 
     // Define que o tratador de evento para
     // o redesenho da tela. A funcao "display"
-    // será chamada automaticamente quando
-    // for necessário redesenhar a janela
+    // serï¿½ chamada automaticamente quando
+    // for necessï¿½rio redesenhar a janela
     glutDisplayFunc ( display );
 
     // Define que o tratador de evento para
-    // o invalida‹o da tela. A funcao "display"
-    // será chamada automaticamente sempre que a
-    // m‡quina estiver ociosa (idle)
+    // o invalidaï¿½ï¿½o da tela. A funcao "display"
+    // serï¿½ chamada automaticamente sempre que a
+    // mï¿½quina estiver ociosa (idle)
     glutIdleFunc(animate);
 
     // Define que o tratador de evento para
     // o redimensionamento da janela. A funcao "reshape"
-    // será chamada automaticamente quando
-    // o usuário alterar o tamanho da janela
+    // serï¿½ chamada automaticamente quando
+    // o usuï¿½rio alterar o tamanho da janela
     glutReshapeFunc ( reshape );
 
     // Define que o tratador de evento para
     // as teclas. A funcao "keyboard"
-    // será chamada automaticamente sempre
-    // o usuário pressionar uma tecla comum
+    // serï¿½ chamada automaticamente sempre
+    // o usuï¿½rio pressionar uma tecla comum
     glutKeyboardFunc ( keyboard );
 
     // Define que o tratador de evento para
     // as teclas especiais(F1, F2,... ALT-A,
     // ALT-B, Teclas de Seta, ...).
-    // A funcao "arrow_keys" será chamada
-    // automaticamente sempre o usuário
+    // A funcao "arrow_keys" serï¿½ chamada
+    // automaticamente sempre o usuï¿½rio
     // pressionar uma tecla especial
     glutSpecialFunc ( arrow_keys );
 

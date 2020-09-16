@@ -19,6 +19,20 @@ void Util::prod_vetorial(Ponto v1, Ponto v2, Ponto& vresult)
 	vresult.y = v1.z * v2.x - (v1.x * v2.z);
 	vresult.z = v1.x * v2.y - (v1.y * v2.x);
 }
+
+int Util::testa_inclusao_ponto(Poligono &ConvexHull, Ponto &p)
+{
+	for (int i = 0; i < ConvexHull.size(); i++)
+	{
+		int aux = (i + 1) % ConvexHull.size();
+		if (polar_angle(ConvexHull.get_vertice(i), ConvexHull.get_vertice(aux), p) == 1) 
+		{
+			return 0;
+		}
+	}
+
+	return 1;
+}
 /* **********************************************************************
   Calcula a interseccao entre 2 retas (no plano "XY" Z = 0)
 k : ponto inicial da reta 1
@@ -48,7 +62,6 @@ int Util::intersec2d(Ponto k, Ponto l, Ponto m, Ponto n, double& s, double& t)
 // **********************************************************************
 bool Util::ha_interseccao(Ponto k, Ponto l, Ponto m, Ponto n)
 {
-	call_ha_intersec += 1; //incr 1 no numero de chamadas
 	int ret;
 	double s, t;
 	ret = intersec2d(k, l, m, n, s, t);
@@ -101,7 +114,7 @@ void Util::gera_pontos(int qtd, Poligono& conjunto_de_ponto, Ponto& max, Ponto& 
 // **********************************************************************
 // **********************************************************************
 
-int polar_angle(Ponto p, Ponto q, Ponto r)
+int Util::polar_angle(Ponto p, Ponto q, Ponto r)
 {
 	double val = (q.y - p.y) * (r.x - q.x) -
 		(q.x - p.x) * (r.y - q.y);
@@ -110,6 +123,7 @@ int polar_angle(Ponto p, Ponto q, Ponto r)
 		return 0;
 	return (val > 0) ? 1 : 2;
 }
+
 void Util::gera_convex_hull(Poligono& mapa, Poligono& convex_hull)
 {
 	int atual = mapa.menorPosicao;
@@ -168,7 +182,7 @@ bool Util::in_range(float low, float high, float x, float y)
 void Util::testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono& mapa, Ponto& min)
 {
 	cout << "Inicio algoritmo testa_faixas" << endl;
-	call_ha_intersec = 0; //inicializa numero de chamadas de ha intersec
+	//call_ha_intersec = 0; //inicializa numero de chamadas de ha intersec
 	
 	glPointSize(3);
 	auto line = Ponto(min.x, 0, 0); //to create a vector to the left
@@ -222,7 +236,6 @@ void Util::testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono
 		{
 			r = 0; g = 0; b = 1;
 		}
-		cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
 		randpontos.desenha_vertice(r, g, b, i);
 	}
 }
@@ -231,7 +244,6 @@ void Util::testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono
 void Util::testa_forca_bruta(Poligono& randpontos, Poligono& mapa, Ponto& min)
 {
 	cout << "Inicio algoritmo testa_forca_bruta" << endl;
-	call_ha_intersec = 0; //inicializa numero de chamadas de ha intersec
 	
 	glPointSize(3);
 	auto line = Ponto(min.x, 0, 0); //to create a vector to the left
@@ -277,7 +289,6 @@ void Util::testa_forca_bruta(Poligono& randpontos, Poligono& mapa, Ponto& min)
 		{
 			r = 0; g = 0; b = 1;
 		}
-		cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
 		randpontos.desenha_vertice(r, g, b, i);
 	}
 }

@@ -18,5 +18,6 @@ namespace Util
 	void testa_forca_bruta(Poligono&randpontos, Poligono& mapa, Ponto& min);
 	void testa_convex_hull();
 	void testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono& mapa, Ponto& min);
-	int call_ha_intersec;
+	int testa_inclusao_ponto(Poligono &ConvexHull, Ponto &p);
+	int polar_angle(Ponto p, Ponto q, Ponto r);
 }
