@@ -98,11 +98,60 @@ void Util::gera_pontos(int qtd, Poligono& conjunto_de_ponto, Ponto& max, Ponto& 
 }
 // **********************************************************************
 // **********************************************************************
+
+int polar_angle(Ponto p, Ponto q, Ponto r)
+{
+	int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+	if (val == 0) return 0;
+	return (val > 0) ? 1 : 2;
+	//return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+}
 void Util::gera_convex_hull(Poligono& mapa, Poligono& convex_hull)
 {
+	Ponto actual = mapa.get_bottom();
+	Ponto vetor(1, 0);//vetor inicial para calc
+	Ponto dest = mapa.get_vertice(0);
+	double escala = -200.0;
+	convex_hull.insere_vertice(actual);
+	do
+	{
+		for(int i=0; i<mapa.size(); i++)
+		{
+			if(mapa.get_vertice(i) == actual)
+			{
+				continue;
+			}
+			Ponto test(mapa.get_vertice(i).x - actual.x, mapa.get_vertice(i).y - actual.y);
+			double modT = sqrt((test.x * test.x) + (test.y * test.y));
+			test.set(test.x / modT, test.y / modT);
+			double rs = prod_escalar(vetor, test);
+			if(rs > escala && rs <= 1)
+			{
+				dest = mapa.get_vertice(i);
+				escala = rs;
+			}
+		}
+		convex_hull.insere_vertice(dest);
+		escala = 0.0;
+		actual = dest;
 
-
-
+		if (actual.x == mapa.get_right().x)
+		{
+			vetor = Ponto(0, 1);
+		}
+		if (actual.y == mapa.get_top().y)
+		{
+			vetor = Ponto(-1, 0);
+		}
+		if (actual.y == mapa.get_bottom().y)
+		{
+			vetor = Ponto(1, 0);
+		}
+		if (actual.x == mapa.get_left().x)
+		{
+			vetor = Ponto(0, -1);
+		}
+	} while (!(actual == mapa.get_bottom()));
 }
 // **********************************************************************
 // **********************************************************************
@@ -255,7 +304,7 @@ void Util::testa_inclusao()
 	//temporizar
 
 	//TestaForcaBruta()
-	//TestaConvexHull()
+	//Testaconvex_hull()
 	//TestaFaixas()
 
 

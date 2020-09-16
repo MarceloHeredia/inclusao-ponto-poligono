@@ -37,7 +37,6 @@ using namespace std;
 #include "Util.h"
 #include "Temporizador.h"
 #include "ConjuntoDeFaixas.h"
-
 Temporizador T;
 double AccumDeltaT=0;
 int nfaixas = 10; //cria 10 faixas por definiçao, pode ser mudado
@@ -104,15 +103,16 @@ void init()
     // Define a cor do fundo da tela PRETO para melhor visualizaçao das cores dos vertices e arestas
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
-    LeMapa("Arquivos\\PoligonoDeTeste.txt");
-   // LeMapa("Arquivos\\EstadoRS.txt");
+  // LeMapa("Arquivos\\PoligonoDeTeste.txt");
+    LeMapa("Arquivos\\EstadoRS.txt");
    /* Min.x--;Min.y--;
     Max.x++;Max.y++;*/
     cout << "Vertices no Vetor: " << Mapa.size() << endl;
 
     faixas.cria_faixas(nfaixas);//cria dez faixas
-    Util::monta_faixas(faixas, Mapa, Max.y, Min.y);
-    Util::gera_pontos(20000,ConjuntoDePonto, Max, Min);
+    //Util::monta_faixas(faixas, Mapa, Max.y, Min.y);
+    Util::gera_pontos(200,ConjuntoDePonto, Max, Min);
+    Util::gera_convex_hull(Mapa, ConvexHull);
     
 }
 // **********************************************************************
@@ -243,11 +243,15 @@ void display( void )
     Mapa.desenha_poligono();
 
 	//Util::testa_forca_bruta(ConjuntoDePonto,Mapa,Min);
-    Util::testa_faixas(faixas,ConjuntoDePonto, Mapa, Min);
+    //Util::testa_faixas(faixas,ConjuntoDePonto, Mapa, Min);
 
-    desenha_faixas();
+    //desenha_faixas();
 	//se Vertice[i] = minimo do vetor & Vertice[i] = maximo do proximo vetor, soma 1
 	//se nao soma 2 //minimo local ou maximo local
+
+    glPointSize(6);
+    glColor3f(1, 0, 0);
+    ConvexHull.desenha_poligono();
 
 	glutSwapBuffers();
 }

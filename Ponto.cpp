@@ -26,3 +26,9 @@ void Ponto::set(float x, float y, float z)
 void Ponto::imprime() {
     cout << "(" << x << ", " << y << ")" << flush;
 }
+
+bool Ponto::operator==(const Ponto other) const
+{
+    return (x == other.x) && (y == other.y);
+}
+
