@@ -2,6 +2,7 @@
 
 int r, g, b; //var auxiliares pra desenhar os vertices
 
+
 // **********************************************************************
 //    Calcula o produto escalar entre os vetores V1 e V2
 // **********************************************************************
@@ -47,6 +48,7 @@ int Util::intersec2d(Ponto k, Ponto l, Ponto m, Ponto n, double& s, double& t)
 // **********************************************************************
 bool Util::ha_interseccao(Ponto k, Ponto l, Ponto m, Ponto n)
 {
+	call_ha_intersec += 1; //incr 1 no numero de chamadas
 	int ret;
 	double s, t;
 	ret = intersec2d(k, l, m, n, s, t);
@@ -101,57 +103,32 @@ void Util::gera_pontos(int qtd, Poligono& conjunto_de_ponto, Ponto& max, Ponto& 
 
 int polar_angle(Ponto p, Ponto q, Ponto r)
 {
-	int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-	if (val == 0) return 0;
+	double val = (q.y - p.y) * (r.x - q.x) -
+		(q.x - p.x) * (r.y - q.y);
+
+	if (val == 0)
+		return 0;
 	return (val > 0) ? 1 : 2;
-	//return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 }
 void Util::gera_convex_hull(Poligono& mapa, Poligono& convex_hull)
 {
-	Ponto actual = mapa.get_bottom();
-	Ponto vetor(1, 0);//vetor inicial para calc
-	Ponto dest = mapa.get_vertice(0);
-	double escala = -200.0;
-	convex_hull.insere_vertice(actual);
+	int atual = mapa.menorPosicao;
+	int prox = 0;
 	do
 	{
-		for(int i=0; i<mapa.size(); i++)
-		{
-			if(mapa.get_vertice(i) == actual)
-			{
-				continue;
-			}
-			Ponto test(mapa.get_vertice(i).x - actual.x, mapa.get_vertice(i).y - actual.y);
-			double modT = sqrt((test.x * test.x) + (test.y * test.y));
-			test.set(test.x / modT, test.y / modT);
-			double rs = prod_escalar(vetor, test);
-			if(rs > escala && rs <= 1)
-			{
-				dest = mapa.get_vertice(i);
-				escala = rs;
-			}
-		}
-		convex_hull.insere_vertice(dest);
-		escala = 0.0;
-		actual = dest;
+		convex_hull.insere_vertice(mapa.get_vertice(atual));
+		prox = (atual + 1) % mapa.size();
 
-		if (actual.x == mapa.get_right().x)
+		for (int i = 0; i < mapa.size(); i++)
 		{
-			vetor = Ponto(0, 1);
+			if (polar_angle(mapa.get_vertice(atual), mapa.get_vertice(i), mapa.get_vertice(prox)) == 2)
+			{
+				prox = i;
+			}
 		}
-		if (actual.y == mapa.get_top().y)
-		{
-			vetor = Ponto(-1, 0);
-		}
-		if (actual.y == mapa.get_bottom().y)
-		{
-			vetor = Ponto(1, 0);
-		}
-		if (actual.x == mapa.get_left().x)
-		{
-			vetor = Ponto(0, -1);
-		}
-	} while (!(actual == mapa.get_bottom()));
+		atual = prox;
+
+	} while (atual != mapa.menorPosicao);
 }
 // **********************************************************************
 // **********************************************************************
@@ -190,6 +167,9 @@ bool Util::in_range(float low, float high, float x, float y)
 // **********************************************************************
 void Util::testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono& mapa, Ponto& min)
 {
+	cout << "Inicio algoritmo testa_faixas" << endl;
+	call_ha_intersec = 0; //inicializa numero de chamadas de ha intersec
+	
 	glPointSize(3);
 	auto line = Ponto(min.x, 0, 0); //to create a vector to the left
 	r = 1;
@@ -242,6 +222,7 @@ void Util::testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono
 		{
 			r = 0; g = 0; b = 1;
 		}
+		cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
 		randpontos.desenha_vertice(r, g, b, i);
 	}
 }
@@ -249,6 +230,9 @@ void Util::testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono
 // **********************************************************************
 void Util::testa_forca_bruta(Poligono& randpontos, Poligono& mapa, Ponto& min)
 {
+	cout << "Inicio algoritmo testa_forca_bruta" << endl;
+	call_ha_intersec = 0; //inicializa numero de chamadas de ha intersec
+	
 	glPointSize(3);
 	auto line = Ponto(min.x, 0, 0); //to create a vector to the left
 	r = 1;
@@ -293,13 +277,13 @@ void Util::testa_forca_bruta(Poligono& randpontos, Poligono& mapa, Ponto& min)
 		{
 			r = 0; g = 0; b = 1;
 		}
+		cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
 		randpontos.desenha_vertice(r, g, b, i);
-
 	}
 }
 // **********************************************************************
 // **********************************************************************
-void Util::testa_inclusao()
+void Util::testa_convex_hull()
 {
 	//temporizar
 

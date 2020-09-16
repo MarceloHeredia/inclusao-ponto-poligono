@@ -47,6 +47,7 @@ public:
     Ponto get_right();
     Ponto get_top();
     Ponto get_bottom();
+    int menorPosicao;
 };
 
 #endif 

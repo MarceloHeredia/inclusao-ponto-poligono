@@ -16,6 +16,7 @@ namespace Util
 	void monta_faixas(ConjuntoDeFaixas& faixas, Poligono& mapa, float max, float min);
 	bool in_range(float low, float high, float x, float y);
 	void testa_forca_bruta(Poligono&randpontos, Poligono& mapa, Ponto& min);
-	void testa_inclusao();
+	void testa_convex_hull();
 	void testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono& mapa, Ponto& min);
+	int call_ha_intersec;
 }

@@ -72,6 +72,7 @@ void LeMapa(const char* nome)
     Min = Ponto(x, y);
     Max = Ponto(x, y);
     Mapa.initialize(Ponto(x, y));
+    Mapa.menorPosicao = 0;
     for (int i = 0; i < qtdVertices; i++)
     {
         // Le cada elemento da linha
@@ -82,6 +83,11 @@ void LeMapa(const char* nome)
 
         if (x > Max.x) Max.x = x;
         if (y > Max.y) Max.y = y;
+
+    	if(Mapa.get_left().x > x)
+    	{
+            Mapa.menorPosicao = i + 1;
+    	}
         if (!input)
             break;
         //cout << "Arquivo: " << x << " " << y << endl;
@@ -103,8 +109,8 @@ void init()
     // Define a cor do fundo da tela PRETO para melhor visualizaçao das cores dos vertices e arestas
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
-  // LeMapa("Arquivos\\PoligonoDeTeste.txt");
-    LeMapa("Arquivos\\EstadoRS.txt");
+   LeMapa("Arquivos\\PoligonoDeTeste.txt");
+   // LeMapa("Arquivos\\EstadoRS.txt");
    /* Min.x--;Min.y--;
     Max.x++;Max.y++;*/
     cout << "Vertices no Vetor: " << Mapa.size() << endl;
