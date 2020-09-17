@@ -1,7 +1,9 @@
 ﻿#include "Util.h"
 
-int r, g, b; //var auxiliares pra desenhar os vertices
+#include <chrono>
 
+int r, g, b; //var auxiliares pra desenhar os vertices
+long call_ha_intersec;
 
 // **********************************************************************
 //    Calcula o produto escalar entre os vetores V1 e V2
@@ -169,6 +171,7 @@ void Util::testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono
 {
 	cout << "Inicio algoritmo testa_faixas" << endl;
 	call_ha_intersec = 0; //inicializa numero de chamadas de ha intersec
+	auto start = std::chrono::high_resolution_clock::now();
 	
 	glPointSize(3);
 	auto line = Ponto(min.x, 0, 0); //to create a vector to the left
@@ -222,9 +225,15 @@ void Util::testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono
 		{
 			r = 0; g = 0; b = 1;
 		}
-		cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
 		randpontos.desenha_vertice(r, g, b, i);
 	}
+	cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
+
+	auto elapsed = std::chrono::high_resolution_clock::now() - start;
+
+	long long nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
+
+	cout << "Tempo da execucao:  " << nanosec << "ns" << endl;
 }
 // **********************************************************************
 // **********************************************************************
@@ -232,6 +241,7 @@ void Util::testa_forca_bruta(Poligono& randpontos, Poligono& mapa, Ponto& min)
 {
 	cout << "Inicio algoritmo testa_forca_bruta" << endl;
 	call_ha_intersec = 0; //inicializa numero de chamadas de ha intersec
+	auto start = std::chrono::high_resolution_clock::now();
 	
 	glPointSize(3);
 	auto line = Ponto(min.x, 0, 0); //to create a vector to the left
@@ -277,9 +287,15 @@ void Util::testa_forca_bruta(Poligono& randpontos, Poligono& mapa, Ponto& min)
 		{
 			r = 0; g = 0; b = 1;
 		}
-		cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
 		randpontos.desenha_vertice(r, g, b, i);
 	}
+	cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
+
+	auto elapsed = std::chrono::high_resolution_clock::now() - start;
+
+	long long nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
+
+	cout << "Tempo da execucao:  " << nanosec << "ns" << endl;
 }
 // **********************************************************************
 // **********************************************************************

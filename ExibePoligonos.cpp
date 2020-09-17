@@ -117,7 +117,7 @@ void init()
 
     faixas.cria_faixas(nfaixas);//cria dez faixas
     //Util::monta_faixas(faixas, Mapa, Max.y, Min.y);
-    Util::gera_pontos(200,ConjuntoDePonto, Max, Min);
+    Util::gera_pontos(20000,ConjuntoDePonto, Max, Min);
     Util::gera_convex_hull(Mapa, ConvexHull);
     
 }
@@ -248,7 +248,7 @@ void display( void )
     glColor3f(1,1,0); // R, G, B  [0..1]
     Mapa.desenha_poligono();
 
-	//Util::testa_forca_bruta(ConjuntoDePonto,Mapa,Min);
+	Util::testa_forca_bruta(ConjuntoDePonto,Mapa,Min);
     //Util::testa_faixas(faixas,ConjuntoDePonto, Mapa, Min);
 
     //desenha_faixas();
