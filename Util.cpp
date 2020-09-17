@@ -4,6 +4,7 @@
 
 int r, g, b; //var auxiliares pra desenhar os vertices
 long call_ha_intersec;
+long call_prod_vetorial;
 
 // **********************************************************************
 //    Calcula o produto escalar entre os vetores V1 e V2
@@ -22,19 +23,6 @@ void Util::prod_vetorial(Ponto v1, Ponto v2, Ponto& vresult)
 	vresult.z = v1.x * v2.y - (v1.y * v2.x);
 }
 
-bool Util::testa_inclusao_ponto(Poligono &ConvexHull, Ponto &p)
-{
-	for (int i = 0; i < ConvexHull.size(); i++)
-	{
-		int aux = (i + 1) % ConvexHull.size();
-		if (polar_angle(ConvexHull.get_vertice(i), ConvexHull.get_vertice(aux), p) == 1) 
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
 /* **********************************************************************
   Calcula a interseccao entre 2 retas (no plano "XY" Z = 0)
 k : ponto inicial da reta 1
@@ -64,6 +52,7 @@ int Util::intersec2d(Ponto k, Ponto l, Ponto m, Ponto n, double& s, double& t)
 // **********************************************************************
 bool Util::ha_interseccao(Ponto k, Ponto l, Ponto m, Ponto n)
 {
+	call_ha_intersec += 1;
 	int ret;
 	double s, t;
 	ret = intersec2d(k, l, m, n, s, t);
@@ -118,6 +107,7 @@ void Util::gera_pontos(int qtd, Poligono& conjunto_de_ponto, Ponto& max, Ponto& 
 
 int Util::polar_angle(Ponto p, Ponto q, Ponto r)
 {
+	call_prod_vetorial += 1;
 	double val = (q.y - p.y) * (r.x - q.x) -
 		(q.x - p.x) * (r.y - q.y);
 
@@ -262,42 +252,14 @@ void Util::testa_forca_bruta(Poligono& randpontos, Poligono& mapa, Ponto& min)
 	b = 1;
 	for (auto i = 0; i < randpontos.size(); i++)
 	{
-		auto num_intersec = 0;
-		line.set(line.x, randpontos.get_vertice(i).y);
-		for (auto j = 0; j < mapa.size() - 1; j++)
+		Ponto vi = randpontos.get_vertice(i);
+		if(aux_forca_bruta(mapa,vi, min))
 		{
-			if (ha_interseccao(randpontos.get_vertice(i), line, mapa.get_vertice(j), mapa.get_vertice(j + 1)))
-			{
-				if (j < mapa.size() - 2)
-				{
-					if (!testa_mid_intersec(line, mapa, j, j + 1, j + 2))
-					{
-						num_intersec++;
-					}
-				}
-				else
-				{
-					if (!testa_mid_intersec(line, mapa, j, j + 1, 0))
-					{
-						num_intersec++;
-					}
-				}
-			}
-		}
-		if (ha_interseccao(randpontos.get_vertice(i), line, mapa.get_vertice(mapa.size() - 1), mapa.get_vertice(0)))
-		{
-			if (!testa_mid_intersec(line, mapa, mapa.size() - 1, 0, 1))
-			{
-				num_intersec++;
-			}
-		}
-		if (num_intersec % 2 == 0)
-		{
-			r = 1; g = 0; b = 0;
+			r = 0; g = 0; b = 1;
 		}
 		else
 		{
-			r = 0; g = 0; b = 1;
+			r = 1; g = 0; b = 0;
 		}
 		randpontos.desenha_vertice(r, g, b, i);
 	}
@@ -310,14 +272,97 @@ void Util::testa_forca_bruta(Poligono& randpontos, Poligono& mapa, Ponto& min)
 	cout << "Tempo da execucao:  " << nanosec << "ns" << endl;
 }
 // **********************************************************************
-// **********************************************************************
-void Util::testa_convex_hull()
+
+bool Util::aux_forca_bruta(Poligono& mapa, Ponto& ponto, Ponto& min)
 {
-	//temporizar
+	auto num_intersec = 0;
+	Ponto line(min.x, ponto.y);
+	for (auto j = 0; j < mapa.size() - 1; j++)
+	{
+		if (ha_interseccao(ponto, line, mapa.get_vertice(j), mapa.get_vertice(j + 1)))
+		{
+			if (j < mapa.size() - 2)
+			{
+				if (!testa_mid_intersec(line, mapa, j, j + 1, j + 2))
+				{
+					num_intersec++;
+				}
+			}
+			else
+			{
+				if (!testa_mid_intersec(line, mapa, j, j + 1, 0))
+				{
+					num_intersec++;
+				}
+			}
+		}
+	}
+	if (ha_interseccao(ponto, line, mapa.get_vertice(mapa.size() - 1), mapa.get_vertice(0)))
+	{
+		if (!testa_mid_intersec(line, mapa, mapa.size() - 1, 0, 1))
+		{
+			num_intersec++;
+		}
+	}
+	if (num_intersec % 2 == 0)
+	{
+		return false;
+	}
+	return true;
+}
 
-	//TestaForcaBruta()
-	//Testaconvex_hull()
-	//TestaFaixas()
+// **********************************************************************
+bool Util::testa_inclusao_ponto(Poligono& ConvexHull, Ponto& p)
+{
+	r = 1;
+	g = 1;
+	b = 1;
+	for (int i = 0; i < ConvexHull.size(); i++)
+	{
+		int aux = (i + 1) % ConvexHull.size();
+		if (polar_angle(ConvexHull.get_vertice(i), ConvexHull.get_vertice(aux), p) == 1)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+// **********************************************************************
+// **********************************************************************
+void Util::testa_convex_hull(Poligono& mapa,Poligono& convex_hull, Poligono& pontos, Ponto& min)
+{
+	cout << "Inicio algoritmo testa_faixas" << endl;
+	call_prod_vetorial= 0; //inicializa numero de chamadas de ha intersec
+	call_ha_intersec = 0;
+	auto start = std::chrono::high_resolution_clock::now();
 
+	for(auto i=0; i<pontos.size(); i++)
+	{
+		auto pontoTestar = pontos.get_vertice(i);
+		if (testa_inclusao_ponto(convex_hull, pontoTestar))
+		{
+			if(aux_forca_bruta(mapa, pontoTestar, min))
+			{
+				r = 0; g = 0; b = 1;
+			}
+			else
+			{
+				r = 1; g = 1; b = 0;
+			}
+		}
+		else
+		{
+			r = 1; g = 0; b = 0;
+		}
+		pontos.desenha_vertice(r, g, b, i);
+	}
 
+	cout << "Numero de chamadas de Produto Vetorial: " << call_prod_vetorial << endl;
+	cout << "Numero de chamadas de Ha_Intersec: " << call_ha_intersec << endl;
+
+	auto elapsed = std::chrono::high_resolution_clock::now() - start;
+
+	long long nanosec = std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
+
+	cout << "Tempo da execucao:  " << nanosec << "ns" << endl;
 }

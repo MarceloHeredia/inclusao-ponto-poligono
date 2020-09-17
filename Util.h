@@ -16,7 +16,8 @@ namespace Util
 	void monta_faixas(ConjuntoDeFaixas& faixas, Poligono& mapa, float max, float min);
 	bool in_range(float low, float high, float x, float y);
 	void testa_forca_bruta(Poligono&randpontos, Poligono& mapa, Ponto& min);
-	void testa_convex_hull();
+	bool aux_forca_bruta(Poligono& mapa, Ponto& ponto, Ponto& min);
+	void testa_convex_hull(Poligono& mapa, Poligono& convex_hull, Poligono& pontos, Ponto& min);
 	void testa_faixas(ConjuntoDeFaixas& faixas, Poligono& randpontos, Poligono& mapa, Ponto& min);
 	bool testa_inclusao_ponto(Poligono &ConvexHull, Ponto &p);
 	int polar_angle(Ponto p, Ponto q, Ponto r);

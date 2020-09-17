@@ -109,20 +109,16 @@ void init()
     // Define a cor do fundo da tela PRETO para melhor visualiza�ao das cores dos vertices e arestas
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
-   LeMapa("Arquivos/PoligonoDeTeste.txt");
-   // LeMapa("Arquivos\\EstadoRS.txt");
+   //LeMapa("Arquivos/PoligonoDeTeste.txt");
+   LeMapa("Arquivos\\EstadoRS.txt");
    /* Min.x--;Min.y--;
     Max.x++;Max.y++;*/
     cout << "Vertices no Vetor: " << Mapa.size() << endl;
 
     faixas.cria_faixas(nfaixas);//cria dez faixas
-    //Util::monta_faixas(faixas, Mapa, Max.y, Min.y);
+    Util::monta_faixas(faixas, Mapa, Max.y, Min.y);
     Util::gera_pontos(20000,ConjuntoDePonto, Max, Min);
     Util::gera_convex_hull(Mapa, ConvexHull);
-    //Ponto test = Ponto(2, 7); // Ponto está dentro do poligono
-    Ponto test = Ponto(2, 8); // Ponto está dentro do poligono
-    ConvexHull.insere_vertice(test);
-    printf("resultado é %d\n ", Util::testa_inclusao_ponto(ConvexHull, test));
     
 }
 // **********************************************************************
@@ -249,19 +245,20 @@ void display( void )
     desenha_eixos();
 
     glLineWidth(2);
-    glColor3f(1,1,0); // R, G, B  [0..1]
+    glColor3f(0,1,0); // R, G, B  [0..1]
     Mapa.desenha_poligono();
 
-	Util::testa_forca_bruta(ConjuntoDePonto,Mapa,Min);
+    glPointSize(3);
+	//Util::testa_forca_bruta(ConjuntoDePonto,Mapa,Min);
     //Util::testa_faixas(faixas,ConjuntoDePonto, Mapa, Min);
+    Util::testa_convex_hull(Mapa,ConvexHull,ConjuntoDePonto,Min);
 
     //desenha_faixas();
 	//se Vertice[i] = minimo do vetor & Vertice[i] = maximo do proximo vetor, soma 1
 	//se nao soma 2 //minimo local ou maximo local
-
-    glPointSize(6);
-    glColor3f(1, 0, 0);
-    ConvexHull.desenha_vertices();
+   // (float)ubyte_color / 255.0f.
+    glColor3f((float)106/255.0f, (float)90/255.0f, (float)205/255.0f);
+    ConvexHull.desenha_poligono();
 
 	glutSwapBuffers();
 }
